@@ -3,9 +3,11 @@ const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
 
-app.engine('handlebars', exphbs())
+app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
 
 app.listen(port, ()=>{
     console.log(`app listening`)
 })
+
+require('./routes/index.js')(app)
