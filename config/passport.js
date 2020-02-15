@@ -34,7 +34,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
     User.findByPk(id)
         .then(user => {
-            done(null, user.get())
+            done(null, user.toJSON())
         })
 })
 

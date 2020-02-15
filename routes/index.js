@@ -31,6 +31,8 @@ module.exports = (app, passport) => {
         res.redirect('/admin/restaurants')
     })
     app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
+    app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
+    app.post('/admin/restaurants',authenticatedAdmin, adminController.postRestaurant )
     
     // 使用者註冊
     app.get('/signup', userController.signUpPage)
