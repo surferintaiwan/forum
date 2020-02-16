@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const flash = require('connect-flash')
 const passport = require('./config/passport.js')
+const methodOverride = require('method-override')
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
@@ -27,6 +28,8 @@ app.use((req,res,next) => {
     res.locals.user = req.user
     next()
 })
+
+app.use(methodOverride('_method'))
 
 app.listen(port, ()=>{
     db.sequelize.sync()
