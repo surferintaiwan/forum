@@ -57,7 +57,6 @@ module.exports = {
                         restaurant.opening_hours = req.body.opening_hours,
                         restaurant.description = req.body.description
                         return restaurant.save()
-
                         /* 也可以寫成這樣
                         restaurant.update({
                             name: req.body.name,
@@ -70,6 +69,15 @@ module.exports = {
                     })
                     .then(restaurant => {
                         req.flash('success_messages', '餐廳資料已更新')
+                        res.redirect('/admin/restaurants')
+                    })
+    },
+    deleteRestaurant: (req, res) => {
+        Restaurant.findByPk(req.params.id)
+                    .then(restaurant => {
+                        restaurant.destroy()
+                    })
+                    .then(restaurant => {
                         res.redirect('/admin/restaurants')
                     })
     }
