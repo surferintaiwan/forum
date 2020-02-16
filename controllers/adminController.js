@@ -29,5 +29,12 @@ module.exports = {
             req.flash('success_messages', '已新增餐廳')
             res.redirect('/admin/restaurants')
         })
+    },
+    getRestaurant: (req, res) => {
+        Restaurant.findByPk(req.params.id)
+                    .then(restaurant => {
+                        return res.render('admin/restaurant', JSON.parse(JSON.stringify({restaurant: restaurant})))
+                    })
+                    
     }
 }
