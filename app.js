@@ -18,6 +18,8 @@ app.use(session({
     saveUninitialized: true,
 }))
 
+app.use('/upload', express.static(__dirname + '/upload'))
+
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
@@ -30,6 +32,7 @@ app.use((req,res,next) => {
 })
 
 app.use(methodOverride('_method'))
+
 
 app.listen(port, ()=>{
     db.sequelize.sync()
