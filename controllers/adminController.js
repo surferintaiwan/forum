@@ -1,13 +1,14 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const User = db.User
+const Category = db.Category
 const fs = require('fs')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = '7c48630cb5a6a56'
 
 module.exports = {
     getRestaurants: (req, res) => {
-        Restaurant.findAll()
+        Restaurant.findAll({include: [Category]})
                   .then(restaurants => {
                       return res.render('admin/restaurants', 
                           JSON.parse(JSON.stringify({restaurants:restaurants}))
@@ -77,7 +78,7 @@ module.exports = {
         
     },
     getRestaurant: (req, res) => {
-        Restaurant.findByPk(req.params.id)
+        Restaurant.findByPk(req.params.id, {include: [Category]})
                     .then(restaurant => {
                         return res.render('admin/restaurant', JSON.parse(JSON.stringify({restaurant: restaurant})))
                     })
