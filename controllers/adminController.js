@@ -78,8 +78,6 @@ module.exports = {
                 res.redirect('/admin/restaurants')
             })
         }
-
-
         
     },
     getRestaurant: (req, res) => {

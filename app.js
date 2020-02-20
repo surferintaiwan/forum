@@ -9,7 +9,10 @@ const flash = require('connect-flash')
 const passport = require('./config/passport.js')
 const methodOverride = require('method-override')
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}))
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main',
+    helpers: require('./config/handlebars-helpers.js') 
+}))
 app.set('view engine', 'handlebars')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
