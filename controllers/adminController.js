@@ -200,7 +200,6 @@ module.exports = {
                 return user
             }).then(user => {
                 res.redirect('/admin/users')
-
             })
     }
 }
