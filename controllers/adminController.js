@@ -16,7 +16,10 @@ module.exports = {
                   })
     },
     createRestaurant:(req, res) => {
-        res.render('admin/create')
+        Category.findAll({raw: true})
+                .then(categories => {
+                    return res.render('admin/create', {categories: categories})
+                })
     },
     postRestaurant: (req, res) => {
         if (!req.body.name) {
@@ -33,7 +36,8 @@ module.exports = {
                     address: req.body.address,
                     opening_hours: req.body.opening_hours,
                     description: req.body.description,
-                    image: file ? img.data.link: null
+                    image: file ? img.data.link: null,
+                    CategoryId: req.body.categoryId
                 })
                 .then(restaurant => {
                     req.flash('success_messages', 'restaurant was successfully created')
@@ -66,7 +70,8 @@ module.exports = {
                 address: req.body.address,
                 opening_hours: req.body.opening_hours,
                 description: req.body.description,
-                image: null
+                image: null,
+                CategoryId: req.body.categoryId
             })
             newRestaurant.save().then(restaurant => {
                 req.flash('success_messages', '已新增餐廳')
@@ -87,7 +92,13 @@ module.exports = {
     editRestaurant: (req, res) => {
         Restaurant.findByPk(req.params.id)
                     .then(restaurant => {
-                        return res.render('admin/create' , JSON.parse(JSON.stringify({restaurant: restaurant})))
+                        Category.findAll({raw:true})
+                                .then(categories=>{
+                                    return res.render('admin/create',  {
+                                        categories: categories, 
+                                        restaurant: restaurant.get()}
+                                    )
+                                })
                     })
     },
     putRestaurant: (req, res) => {
@@ -107,7 +118,8 @@ module.exports = {
                         address: req.body.address,
                         opening_hours: req.body.opening_hours,
                         description: req.body.description,
-                        image: file ? img.data.link : restaurant.image
+                        image: file ? img.data.link : restaurant.image,
+                        CategoryId: req.body.categoryId
                     })
                 })
                 .then(restaurant => {
@@ -148,6 +160,7 @@ module.exports = {
                         restaurant.address = req.body.address,
                         restaurant.opening_hours = req.body.opening_hours,
                         restaurant.description = req.body.description
+                        restaurant.CategoryId = req.body.categoryId
                         return restaurant.save()
                         /* 也可以寫成這樣
                         restaurant => {
