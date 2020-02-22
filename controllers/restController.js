@@ -17,8 +17,18 @@ module.exports = {
                             restaurants: JSON.parse(JSON.stringify(data))
                         })
                     })
+    },
+    getRestaurant: (req, res) => {
+        Restaurant.findByPk(req.params.id, {raw: true, nest: true, include: Category})
+                    .then(restaurant => {
+                        return res.render('restaurant' , {
+                            restaurant: restaurant
+                        })
+                    })
     }
+
 }
+
 
 /*
 // 其實也可以寫成這樣
