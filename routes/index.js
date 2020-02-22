@@ -23,13 +23,13 @@ module.exports = (app, passport) => {
         res.redirect('/signin')
     }
     
-    // 一般用戶前台路由
+    // 前台
     app.get('/', authenticated, (req, res) => {
         res.redirect('/restaurants')
     })
     app.get('/restaurants', authenticated, restController.getRestaurants)
     
-    // 管理者後台路由
+    // 後台
     app.get('/admin', authenticatedAdmin, (req, res) => {
         res.redirect('/admin/restaurants')
     })
@@ -49,11 +49,11 @@ module.exports = (app, passport) => {
     app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
     app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
     
-    // 使用者註冊
+    // 註冊
     app.get('/signup', userController.signUpPage)
     app.post('/signup', userController.signUp)
     
-    // 使用者登入路由
+    // 登入
     app.get('/signin', userController.signInPage)
     app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin' ,failureFlash: true}), userController.signIn)
     app.get('/logout', userController.logOut)
