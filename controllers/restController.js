@@ -1,5 +1,7 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
+const User = db.User
+const Comment = db.Comment
 const Category = db.Category
 const pageLimit = 10
 
@@ -13,6 +15,7 @@ module.exports = {
             categoryId = Number(req.query.categoryId)
             whereQuery['CategoryId'] = categoryId
         }
+        
         // ---進行分頁處理(供撈資料用)---
         // 判斷如果"不是首次"進來的，就另外計算撈資料用的offset參數，因為如果是第一次進來的，它的網址會是/restaurants而已，req.query.page會沒資料是個undefined
         if (req.query.page - 1) {
@@ -27,6 +30,7 @@ module.exports = {
                         let totalPages = Array.from({length: pages }).map((item, index) => index + 1)
                         let prev = page - 1 < 1 ? 1 : page - 1
                         let next = page + 1 > pages ? pages : page + 1
+                        
                         // 把description拿出來處理，變成50個字元再存進去，最後給view用
                         const data = restaurants.rows.map(r => { 
                             return {
@@ -48,12 +52,24 @@ module.exports = {
                     })
     },
     getRestaurant: (req, res) => {
+        Restaurant.findByPk(req.params.id, {
+            include: [
+                Category,
+                {model: Comment, raw:true, nest:true ,include: User} 
+            ]
+        }).then(restaurant => {
+            return res.render('restaurant', {
+                restaurant: JSON.parse(JSON.stringify(restaurant))
+            })
+        })
+        /*
         Restaurant.findByPk(req.params.id, {raw: true, nest: true, include: Category})
                     .then(restaurant => {
                         return res.render('restaurant' , {
                             restaurant: restaurant
                         })
                     })
+        */
     }
 
 }
