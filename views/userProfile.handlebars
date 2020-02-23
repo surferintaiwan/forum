@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            {{requestUser}}
+            <img src="{{user.image}}" alt="profilePicture" style="width: 250px;margin-bottom: 25px">
+        </div>
+        <div class="col-sm">
+            <p>{{user.name}}</p>
+            {{#ifCond user.id requestUser.id}}
+                <a href="/users/{{user.id}}/edit" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Edit</a>
+            {{/ifCond}}
+        </div>
+    </div>
+
+</div>

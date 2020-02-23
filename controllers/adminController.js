@@ -4,7 +4,7 @@ const User = db.User
 const Category = db.Category
 const fs = require('fs')
 const imgur = require('imgur-node-api')
-const IMGUR_CLIENT_ID = '7c48630cb5a6a56'
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 module.exports = {
     getRestaurants: (req, res) => {
@@ -29,7 +29,7 @@ module.exports = {
         const {file} = req
         if (file) {
             imgur.setClientID(IMGUR_CLIENT_ID)
-            imgur.upload(file.path, (err,img) => {
+            imgur.upload(file.path, (err, img) => {
                 return Restaurant.create({
                     name: req.body.name,
                     tel: req.body.tel,
@@ -125,31 +125,6 @@ module.exports = {
                     res.redirect('/admin/restaurants')
                 }) 
             })
-            
-            /*
-            圖片還沒上傳到imgur以前的作法
-            fs.readFile(file.path, (err, data) => {
-                if (err) console.log('Error:', err)
-                fs.writeFile(`upload/${file.originalname}`, data, () => {
-                    Restaurant.findByPk(req.params.id)
-                    .then(restaurant=> {
-                        restaurant.update({
-                            name: req.body.name,
-                            tel: req.body.tel,
-                            address: req.body.address,
-                            opening_hours: req.body.opening_hours,
-                            description: req.body.description,
-                            image: file ? `/upload/${file.originalname}` : null
-                        })
-                    })
-                    .then(restaurant => {
-                        req.flash('success_messages', 'restaurant was successfully updated')
-                        res.redirect('/admin/restaurants')
-                    })
-                })
-            })
-            */ 
-            
         } else {
             Restaurant.findByPk(req.params.id)
                     .then(restaurant => {
@@ -207,7 +182,6 @@ module.exports = {
                     user.update({
                         isAdmin: true
                     })
-
                 }
                 return user
             }).then(user => {

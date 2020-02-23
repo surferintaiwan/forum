@@ -9,6 +9,10 @@ const flash = require('connect-flash')
 const passport = require('./config/passport.js')
 const methodOverride = require('method-override')
 
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     helpers: require('./config/handlebars-helpers.js') 
@@ -35,7 +39,6 @@ app.use((req,res,next) => {
 })
 
 app.use(methodOverride('_method'))
-
 
 app.listen(port, ()=>{
     db.sequelize.sync()
