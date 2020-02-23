@@ -5,6 +5,7 @@
         </div>
         <div class="col-sm">
             <p>{{requestUser.name}}</p>
+            <p>{{requestUser.email}}</p>
             {{#ifCond user.id requestUser.id}}
                 <a href="/users/{{user.id}}/edit" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Edit</a>
             {{/ifCond}}
