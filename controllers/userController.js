@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 /* 如果是想要把temp資料夾內的圖片複製到upload就要載入fs
@@ -65,8 +67,16 @@ const userController = {
     getUser: (req, res)=>{
         User.findByPk(req.params.id)
             .then(user => {
-                console.log(user)
-                res.render('userProfile', {requestUser: user.get()})        
+                let commentsAmounts = 0
+                Comment.findAndCountAll({include: Restaurant, where: {UserId: req.params.id}})
+                        .then(comments => {
+                            commentsAmounts = comments.count
+                            return res.render('userProfile', {
+                                requestUser: user.get(),
+                                commentsAmounts: commentsAmounts,
+                                comments: JSON.parse(JSON.stringify(comments.rows))
+                            })
+                        })
             })
         
     },
