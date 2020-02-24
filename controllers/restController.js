@@ -70,6 +70,28 @@ module.exports = {
                         })
                     })
         */
+    },
+    getFeeds: (req, res) => {
+        Restaurant.findAll({
+            raw: true,
+            nest: true,
+            limit: 10,
+            order: [['createdAt', 'DESC']],
+            include: [Category]
+        }).then(restaurants => {
+            Comment.findAll({
+                raw: true,
+                nest: true,
+                limit:10,
+                order: [['createdAt', 'DESC']],
+                include: [User, Restaurant]
+            }).then(comments=> {
+                return res.render('feeds', {
+                    restaurants: restaurants,
+                    comments:comments
+                })
+            })
+        })
     }
 
 }

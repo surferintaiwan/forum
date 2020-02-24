@@ -29,7 +29,10 @@ module.exports = (app, passport) => {
         res.redirect('/restaurants')
     })
     app.get('/restaurants', authenticated, restController.getRestaurants)
+    app.get('/restaurants/feeds', authenticated, restController.getFeeds)
     app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+    
+    
     app.get('/users/:id', authenticated, userController.getUser)
     app.get('/users/:id/edit', authenticated, userController.editUser)
     app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
