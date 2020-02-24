@@ -10,8 +10,13 @@ module.exports = (sequelize, DataTypes) => {
     viewCounts: DataTypes.INTEGER
   }, {});
   Restaurant.associate = function(models) {
-    Restaurant.belongsTo(models.Category)// associations can be defined here
+    Restaurant.belongsTo(models.Category)
     Restaurant.hasMany(models.Comment)
+    Restaurant.belongsToMany(models.User, {
+      through: models.Favorite,
+      foreignKey: 'RestaurantId',
+      as: 'FavoriteUsers'
+    })
   };
   return Restaurant;
 };

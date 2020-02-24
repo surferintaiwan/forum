@@ -102,11 +102,22 @@ module.exports = {
                         Comment.findAndCountAll({where: {RestaurantId: req.params.id}})
                                 .then(comments => {
                                     let commentsAmount = comments.count
-                                    res.render('restaurantDashboard', {
+                                    return res.render('restaurantDashboard', {
                                         restaurant: restaurant,
                                         commentsAmount: commentsAmount
                                     })
                                 }) 
                     })
     }
+    /*這樣寫也是可以，但restaurantDashboard那邊顯示評論數要改成{{restaurant.Comments.length}}
+    getDashboard: (req, res) => {
+        Restaurant.findByPk(req.params.id, {include: [Category, Comment]})
+                    .then(restaurant => {
+                        return res.render('restaurantDashboard', {restaurant: restaurant})
+                    })
+    }
+    */
+    
+    
+    
 }
