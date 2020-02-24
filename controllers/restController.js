@@ -58,6 +58,9 @@ module.exports = {
                 {model: Comment, raw:true, nest:true ,include: User} 
             ]
         }).then(restaurant => {
+            restaurant.update({
+                viewCounts: restaurant.viewCounts + 1
+            })
             return res.render('restaurant', {
                 restaurant: JSON.parse(JSON.stringify(restaurant))
             })
