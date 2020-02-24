@@ -67,10 +67,9 @@ const userController = {
     getUser: (req, res)=>{
         User.findByPk(req.params.id)
             .then(user => {
-                let commentsAmounts = 0
                 Comment.findAndCountAll({include: Restaurant, where: {UserId: req.params.id}})
                         .then(comments => {
-                            commentsAmounts = comments.count
+                            let commentsAmounts = comments.count
                             return res.render('userProfile', {
                                 requestUser: user.get(),
                                 commentsAmounts: commentsAmounts,

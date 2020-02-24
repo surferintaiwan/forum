@@ -92,18 +92,18 @@ module.exports = {
                 })
             })
         })
+    },
+    getDashboard: (req, res) => {
+        Restaurant.findByPk(req.params.id, {raw: true, nest: true, include: [Category]})
+                    .then(restaurant => {
+                        Comment.findAndCountAll({where: {RestaurantId: req.params.id}})
+                                .then(comments => {
+                                    let commentsAmount = comments.count
+                                    res.render('restaurantDashboard', {
+                                        restaurant: restaurant,
+                                        commentsAmount: commentsAmount
+                                    })
+                                }) 
+                    })
     }
-
 }
-
-
-/*
-// 其實也可以寫成這樣
-const resController = {
-    getRestaurants: (req, res) => {
-        res.render('restaurants')
-    }
-}
-
-module.exports = restController
-*/
