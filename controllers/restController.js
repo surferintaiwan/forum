@@ -32,10 +32,11 @@ module.exports = {
                         let next = page + 1 > pages ? pages : page + 1
                         
                         // 把description拿出來處理，變成50個字元再存進去，最後給view用
-                        const data = restaurants.rows.map(r => { 
+                        const data = restaurants.rows.map(r => {
                             return {
                             ...r.dataValues,
-                            description: r.description.substring(0, 50)
+                            description: r.description.substring(0, 50),
+                            isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
                         }})
                         Category.findAll({raw: true})
                                 .then(categories => {
@@ -55,14 +56,17 @@ module.exports = {
         Restaurant.findByPk(req.params.id, {
             include: [
                 Category,
-                {model: Comment, raw:true, nest:true ,include: User} 
+                {model: Comment, raw:true, nest:true ,include: User},
+                {model: User, as: 'FavoritedUsers'} 
             ]
         }).then(restaurant => {
+            const isFavorited = restaurant.FavoritedUsers.map(r => r.id).includes(req.user.id)
             restaurant.update({
                 viewCounts: restaurant.viewCounts + 1
             })
             return res.render('restaurant', {
-                restaurant: JSON.parse(JSON.stringify(restaurant))
+                restaurant: JSON.parse(JSON.stringify(restaurant)),
+                isFavorited: isFavorited
             })
         })
         /*
