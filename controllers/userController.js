@@ -4,6 +4,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 /* 如果是想要把temp資料夾內的圖片複製到upload就要載入fs
@@ -157,6 +158,29 @@ const userController = {
                         return res.redirect('back')
                     })
             
+        })
+    },
+    addLike: (req, res) => {
+        Like.create({
+            UserId: req.user.id,
+            RestaurantId: req.params.restaurantId
+        })
+        .then(like => {
+            return res.redirect('back')
+        })
+    },
+    removeLike: (req, res) => {
+        Like.findOne({
+            where: {
+                UserId: req.user.id,
+                RestaurantId: req.params.restaurantId
+            }
+        })
+        .then(like => {
+            like.destroy()
+                .then(like => {
+                    return res.redirect('back')
+                })
         })
     }
 }

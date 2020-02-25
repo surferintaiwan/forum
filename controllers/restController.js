@@ -36,7 +36,8 @@ module.exports = {
                             return {
                             ...r.dataValues,
                             description: r.description.substring(0, 50),
-                            isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+                            isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+                            isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
                         }})
                         Category.findAll({raw: true})
                                 .then(categories => {
@@ -57,16 +58,19 @@ module.exports = {
             include: [
                 Category,
                 {model: Comment, raw:true, nest:true ,include: User},
-                {model: User, as: 'FavoritedUsers'} 
+                {model: User, as: 'FavoritedUsers'} ,
+                {model: User, as: 'LikedUsers'}
             ]
         }).then(restaurant => {
             const isFavorited = restaurant.FavoritedUsers.map(r => r.id).includes(req.user.id)
+            const isLiked = restaurant.LikedUsers.map(r => r.id).includes(req.user.id)
             restaurant.update({
                 viewCounts: restaurant.viewCounts + 1
             })
             return res.render('restaurant', {
                 restaurant: JSON.parse(JSON.stringify(restaurant)),
-                isFavorited: isFavorited
+                isFavorited: isFavorited,
+                isLiked: isLiked
             })
         })
         /*
