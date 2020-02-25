@@ -192,7 +192,6 @@ const userController = {
         })
         .then(users => {
             users = users.map(user => { 
-                console.log(req.user)
                 return {
                 ...user.dataValues,
                 FollowerCount: user.Followers.length,
@@ -200,7 +199,6 @@ const userController = {
                 }
             })
             users = users.sort((a, b) =>  b.FollowerCount - a.FollowerCount)
-            
             return res.render('topUser', { users: users})
         })
     },
