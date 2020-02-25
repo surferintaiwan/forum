@@ -4,6 +4,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Followership = db.Followership
 const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -190,13 +191,40 @@ const userController = {
             ]
         })
         .then(users => {
-            users = users.map(user => ({
-                ...users.dataValues,
+            users = users.map(user => { 
+                console.log(req.user)
+                return {
+                ...user.dataValues,
                 FollowerCount: user.Followers.length,
-                isFollowed: req.user.Followings.map(d => d.id).includes(users.id)
-            }))
-            users = users.sort((a, b) => { b.FollowerCount - a.FollowerCount})
+                isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+                }
+            })
+            users = users.sort((a, b) =>  b.FollowerCount - a.FollowerCount)
+            
             return res.render('topUser', { users: users})
+        })
+    },
+    addFollowing: (req, res) => {
+        Followership.create({
+            followerId: req.user.id,
+            followingId: req.params.userId
+        })
+        .then(followship => {
+            return res.redirect('back')
+        })
+    },
+    removeFollowing: (req, res) => {
+        Followership.findOne({
+            where: {
+                followerId: req.user.id,
+                followingId: req.params.userId
+            }
+        })
+        .then(followership => {
+            followership.destroy()
+                        .then(followship => {
+                            return res.redirect('back')
+                        })
         })
     }
 }
