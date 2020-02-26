@@ -45,4 +45,4 @@ app.listen(port, ()=>{
     console.log(`app listening`)
 })
 
-require('./routes')(app, passport)
+require('./routes')(app)
