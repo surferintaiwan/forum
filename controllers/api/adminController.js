@@ -1,12 +1,9 @@
-const db = require('../../models')
-const Restaurant = db.Restaurant
-const Category = db.Category
+const adminService = require('../../services/adminServices.js')
 
 module.exports = {
     getRestaurants: (req, res) => {
-        Restaurant.findAll({include: [Category]})
-                  .then(restaurants => {
-                      res.json({restaurants: restaurants})
-                  })
+        adminService.getRestaurants(req, res, data => {
+            res.json(data)
+        })
     }
 }
