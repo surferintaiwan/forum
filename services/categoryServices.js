@@ -40,5 +40,14 @@ module.exports = {
         } else {
             callback({status: 'Error', message: '請輸入分類名稱'})
         }  
+    },
+    deleteCategory: (req, res, callback) => {
+        Category.findByPk(req.params.id)
+                .then(category => {
+                    category.destroy()
+                            .then(category => {
+                                callback({status: 'Success', message: ''})
+                            })
+                })
     }
 }
