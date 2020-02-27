@@ -14,6 +14,15 @@ module.exports = {
                     .then(restaurant => {
                         callback(JSON.parse(JSON.stringify({restaurant: restaurant})))
                     })
-    }
+    },
+    deleteRestaurant: (req, res, callback) => {
+        Restaurant.findByPk(req.params.id)
+                    .then(restaurant => {
+                        restaurant.destroy()
+                    })
+                    .then(restaurant => {
+                        callback({status: 'Success', message: ''})
+                    })
+    },
 
 }
