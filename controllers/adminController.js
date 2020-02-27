@@ -2,8 +2,6 @@ const db = require('../models')
 const Restaurant = db.Restaurant
 const User = db.User
 const Category = db.Category
-const fs = require('fs')
-const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const adminService = require('../services/adminServices.js')
 
@@ -20,63 +18,15 @@ module.exports = {
                 })
     },
     postRestaurant: (req, res) => {
-        if (!req.body.name) {
-            req.flash('error_messages', '請輸入餐廳名稱')
-            return res.redirect('back')
-        }
-        const {file} = req
-        if (file) {
-            imgur.setClientID(IMGUR_CLIENT_ID)
-            imgur.upload(file.path, (err, img) => {
-                return Restaurant.create({
-                    name: req.body.name,
-                    tel: req.body.tel,
-                    address: req.body.address,
-                    opening_hours: req.body.opening_hours,
-                    description: req.body.description,
-                    image: file ? img.data.link: null,
-                    CategoryId: req.body.categoryId
-                })
-                .then(restaurant => {
-                    req.flash('success_messages', 'restaurant was successfully created')
-                    return res.redirect('/admin/restaurants')
-                })
-            })
+        adminService.postRestaurant(req, res, data => {
+            if (data.status === 'Error') {
+                req.flash('error_messages', data.message)
+                return res.redirect('back')
+            }
+            req.flash('success_messages', data.message)
+            return res.redirect('/admin/restaurants')
             
-            /* 還沒上傳到imgur以前的寫法
-            fs.readFile(file.path, (err, data)=>{
-                if (err) console.log('Error: ', err)    
-                fs.writeFile(`upload/${file.originalname}`, data, ()=>{
-                    Restaurant.create({
-                        name: req.body.name,
-                        tel: req.body.tel,
-                        address : req.body.address,
-                        opening_hours: req.body.opening_hours,
-                        description: req.body.description,
-                        image: file ? `/upload/${file.originalname}`: null
-                    }).then((restaurant) => {
-                        req.flash('success_messages', 'restaurant was successfully created')
-                        res.redirect('/admin/restaurants')
-                    })
-                })
-            })
-            */
-        } else {
-            newRestaurant = new Restaurant({
-                name: req.body.name,
-                tel: req.body.tel,
-                address: req.body.address,
-                opening_hours: req.body.opening_hours,
-                description: req.body.description,
-                image: null,
-                CategoryId: req.body.categoryId
-            })
-            newRestaurant.save().then(restaurant => {
-                req.flash('success_messages', '已新增餐廳')
-                res.redirect('/admin/restaurants')
-            })
-        }
-        
+        }) 
     },
     getRestaurant: (req, res) => {
         adminService.getRestaurant(req, res, data=>{

@@ -1,6 +1,8 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 module.exports = {
     getRestaurants: (req, res, callback) => {
@@ -24,5 +26,41 @@ module.exports = {
                         callback({status: 'Success', message: ''})
                     })
     },
-
+    postRestaurant: (req, res, callback) => {
+        if (!req.body.name) {
+            return callback({status: 'Error', message: '請輸入餐廳名稱'})
+        }
+        const {file} = req
+        if (file) {
+            imgur.setClientID(IMGUR_CLIENT_ID)
+            imgur.upload(file.path, (err, img) => {
+                return Restaurant.create({
+                    name: req.body.name,
+                    tel: req.body.tel,
+                    address: req.body.address,
+                    opening_hours: req.body.opening_hours,
+                    description: req.body.description,
+                    image: file ? img.data.link: null,
+                    CategoryId: req.body.categoryId
+                })
+                .then(restaurant => {
+                    return callback({status: 'Success', message: '已新增餐廳'})
+                })
+            })
+        } else {
+            newRestaurant = new Restaurant({
+                name: req.body.name,
+                tel: req.body.tel,
+                address: req.body.address,
+                opening_hours: req.body.opening_hours,
+                description: req.body.description,
+                image: null,
+                CategoryId: req.body.categoryId
+            })
+            newRestaurant.save().then(restaurant => {
+                return callback({status: 'Success', message: '已新增餐廳'})
+            })
+        }
+        
+    },
 }
