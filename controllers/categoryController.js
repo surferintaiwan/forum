@@ -1,21 +1,14 @@
 const db = require('../models')
 const Category = db.Category
+const categoryService = require('../services/categoryServices')
 
 module.exports = {
     getCategories: (req, res) => {
-        Category.findAll({raw: true})
-                .then(categories => {       
-                    if (req.params.id) {   
-                        Category.findByPk(req.params.id)
-                                .then(category => {
-                                return res.render('admin/categories', {categories: categories, category: category.get()})
-                                })
-                    } else {
-                        return res.render('admin/categories', {categories: categories})
-                    }
-                })
+        categoryService.getCategories(req, res, data => {
+            return res.render('admin/categories', data)
+        })
+        
     },
-
     postCategory: (req, res) => {
         if (req.body.categoryName) {
             Category.create({
