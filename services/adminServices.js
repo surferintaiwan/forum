@@ -8,5 +8,12 @@ module.exports = {
                   .then(restaurants => {
                       callback(JSON.parse(JSON.stringify({restaurants: restaurants})))
                   })
+    },
+    getRestaurant:(req, res, callback) => {
+        Restaurant.findByPk(req.params.id, {include: [Category]})
+                    .then(restaurant => {
+                        callback(JSON.parse(JSON.stringify({restaurant: restaurant})))
+                    })
     }
+
 }

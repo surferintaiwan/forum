@@ -79,6 +79,10 @@ module.exports = {
         
     },
     getRestaurant: (req, res) => {
+        adminService.getRestaurant(req, res, data=>{
+            res.render('admin/restaurant', data)
+        })
+        
         Restaurant.findByPk(req.params.id, {include: [Category]})
                     .then(restaurant => {
                         return res.render('admin/restaurant', JSON.parse(JSON.stringify({restaurant: restaurant})))

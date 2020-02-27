@@ -5,5 +5,11 @@ module.exports = {
         adminService.getRestaurants(req, res, data => {
             res.json(data)
         })
+    },
+    getRestaurant: (req, res) => {
+        adminService.getRestaurant(req, res, data =>{
+            res.json(data)
+        })
     }
+
 }
