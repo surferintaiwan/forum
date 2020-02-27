@@ -11,7 +11,7 @@ module.exports = {
                       callback(JSON.parse(JSON.stringify({restaurants: restaurants})))
                   })
     },
-    getRestaurant:(req, res, callback) => {
+    getRestaurant: (req, res, callback) => {
         Restaurant.findByPk(req.params.id, {include: [Category]})
                     .then(restaurant => {
                         callback(JSON.parse(JSON.stringify({restaurant: restaurant})))
@@ -63,4 +63,44 @@ module.exports = {
         }
         
     },
+    putRestaurant: (req, res, callback) => {
+        if (!req.body.name) {
+            return callback({status: 'Error', message: '請輸入餐廳名稱'})       
+        }
+        const {file} = req
+        if (file) {
+            imgur.setClientID(IMGUR_CLIENT_ID)
+            imgur.upload(file.path, (err, img)=> {
+                return Restaurant.findByPk(req.params.id)
+                .then(restaurant => {
+                    restaurant.update({
+                        name: req.body.name,
+                        tel: req.body.tel,
+                        address: req.body.address,
+                        opening_hours: req.body.opening_hours,
+                        description: req.body.description,
+                        image: file ? img.data.link : restaurant.image,
+                        CategoryId: req.body.categoryId
+                    })
+                })
+                .then(restaurant => {
+                    return callback({status: 'Success', message: '已更新餐廳'})
+                }) 
+            })
+        } else {
+            Restaurant.findByPk(req.params.id)
+                    .then(restaurant => {
+                        restaurant.name = req.body.name,
+                        restaurant.tel = req.body.tel,
+                        restaurant.address = req.body.address,
+                        restaurant.opening_hours = req.body.opening_hours,
+                        restaurant.description = req.body.description
+                        restaurant.CategoryId = req.body.categoryId
+                        return restaurant.save()
+                    })
+                    .then(restaurant => {
+                        return callback({status: 'Success', message: '已更新餐廳'})
+                    })
+        }
+    }
 }

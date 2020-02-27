@@ -32,12 +32,6 @@ module.exports = {
         adminService.getRestaurant(req, res, data=>{
             res.render('admin/restaurant', data)
         })
-        
-        Restaurant.findByPk(req.params.id, {include: [Category]})
-                    .then(restaurant => {
-                        return res.render('admin/restaurant', JSON.parse(JSON.stringify({restaurant: restaurant})))
-                    })
-                    
     },
     editRestaurant: (req, res) => {
         Restaurant.findByPk(req.params.id)
@@ -52,60 +46,16 @@ module.exports = {
                     })
     },
     putRestaurant: (req, res) => {
-        if (!req.body.name) {
-            req.flash('error_messages', '請輸入餐廳名稱')
-            return res.redirect('back')
-        }
-        const {file} = req
-        if (file) {
-            imgur.setClientID(IMGUR_CLIENT_ID)
-            imgur.upload(file.path, (err, img)=> {
-                return Restaurant.findByPk(req.params.id)
-                .then(restaurant => {
-                    restaurant.update({
-                        name: req.body.name,
-                        tel: req.body.tel,
-                        address: req.body.address,
-                        opening_hours: req.body.opening_hours,
-                        description: req.body.description,
-                        image: file ? img.data.link : restaurant.image,
-                        CategoryId: req.body.categoryId
-                    })
-                })
-                .then(restaurant => {
-                    req.flash('success_messages', 'restaurant was successfully updated')
-                    res.redirect('/admin/restaurants')
-                }) 
-            })
-        } else {
-            Restaurant.findByPk(req.params.id)
-                    .then(restaurant => {
-                        restaurant.name = req.body.name,
-                        restaurant.tel = req.body.tel,
-                        restaurant.address = req.body.address,
-                        restaurant.opening_hours = req.body.opening_hours,
-                        restaurant.description = req.body.description
-                        restaurant.CategoryId = req.body.categoryId
-                        return restaurant.save()
-                        /* 也可以寫成這樣
-                        restaurant => {
-                            restaurant.update({
-                            name: req.body.name,
-                            tel: req.body.tel,
-                            address: req.body.address,
-                            opening_hours: req.body.opening_hours,
-                            description: req.body.description
-                            image: restaurant.image
-                          })
-                        
-                        */
-                    })
-                    .then(restaurant => {
-                        req.flash('success_messages', '餐廳資料已更新')
-                        res.redirect('/admin/restaurants')
-                    })
-        }
+        adminService.putRestaurant(req, res, data => {
+            if (data.status === 'Error') {
+                req.flash('error_messages', data.message)
+                return res.redirect('back')
+            } 
+            req.flash('success_messages', data.message)
+            return res.redirect('/')
+        })
     },
+
     deleteRestaurant: (req, res) => {
         adminService.deleteRestaurant(req, res, data => {
             if (data.status === 'Success') {
