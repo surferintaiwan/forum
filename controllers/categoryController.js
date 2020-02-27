@@ -10,17 +10,13 @@ module.exports = {
         
     },
     postCategory: (req, res) => {
-        if (req.body.categoryName) {
-            Category.create({
-                name: req.body.categoryName
-            }).then(category => {
+        categoryService.postCategory(req, res, data => {
+            if (data.status === 'Success') {
                 return res.redirect('/admin/categories')
-            })
-        } else {
-            req.flash('error_messages', '請輸入分類名稱')
-            res.redirect('back')
-        }
-        
+            }
+            req.flash('error_messages', data.message)
+            return res.redirect('back')
+        })
     },
 
     putCategory: (req, res) =>{
