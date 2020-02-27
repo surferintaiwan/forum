@@ -26,5 +26,19 @@ module.exports = {
             return callback({status: 'Error', message: '請輸入分類名稱'})
         }
         
+    },
+    putCategory: (req, res, callback) =>{
+        if (req.body.categoryName) {
+            Category.findByPk(req.params.id)
+                .then(category => {
+                    category.update({
+                        name: req.body.categoryName
+                    }).then(category => {
+                        callback({status: 'Success', message: '更新分類名稱成功'})
+                    })
+                })
+        } else {
+            callback({status: 'Error', message: '請輸入分類名稱'})
+        }  
     }
 }
