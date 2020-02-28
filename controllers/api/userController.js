@@ -37,6 +37,43 @@ let userController = {
                     }
                 })
             })
+    },
+    signUp: (req, res) => {
+        name = req.body.name
+        email = req.body.email
+        password = req.body.password
+        passwordCheck = req.body.passwordCheck
+        // 驗證兩次密碼是否相同
+        if (password !== passwordCheck) {
+            res.json({status: 'Error', message: '兩次密碼不相符'})
+        } else {
+        // 查詢帳號是否已註冊
+            User.findOne({where: {email: email}})
+                .then(user=>{
+                    // 有註冊過就跳出error訊息
+                    if (user) {
+                        res.json({status: 'Error', message: '這個帳號註冊過囉!'})
+      
+                    } else {
+                        // 沒註冊過則存進資料庫
+                        bcrypt.genSalt(10, function(err, salt) {
+                            bcrypt.hash(password, salt, function(err, hash) {
+                                // Store hash in your password DB.
+                                const newUser = new User({
+                                    name: name,
+                                    email: email,
+                                    password: hash
+                                })
+                                newUser
+                                .save()
+                                .then(user => {
+                                    res.json({status: 'Error', message: '註冊成功囉!'})
+                                })
+                            })
+                        })
+                    }     
+                })
+        }
     }
 }
 
