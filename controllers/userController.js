@@ -91,27 +91,10 @@ const userController = {
         userService.removeFavorite(req, res, data => res.redirect('back'))
     },
     addLike: (req, res) => {
-        Like.create({
-            UserId: req.user.id,
-            RestaurantId: req.params.restaurantId
-        })
-        .then(like => {
-            return res.redirect('back')
-        })
+        userService.addLike(req, res, data => res.redirect('back'))
     },
     removeLike: (req, res) => {
-        Like.findOne({
-            where: {
-                UserId: req.user.id,
-                RestaurantId: req.params.restaurantId
-            }
-        })
-        .then(like => {
-            like.destroy()
-                .then(like => {
-                    return res.redirect('back')
-                })
-        })
+        userService.removeLike(req, res, data => res.redirect('back'))
     },
     getTopUser: (req, res) => {
         userService.getTopUser(req, res, data => res.render('topUser', data))

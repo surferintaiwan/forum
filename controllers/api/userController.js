@@ -88,9 +88,16 @@ let userController = {
     removeFavorite: (req, res) => {
         userService.removeFavorite(req, res, data => res.json(data))
     },
+    addLike: (req, res) => {
+        userService.addLike(req, res, data => res.json(data))
+    },
+    removeLike: (req, res) => {
+        userService.removeLike(req, res, data => res.json(data))
+    },
     getTopUser: (req, res) => {
         userService.getTopUser(req, res, data => res.json(data))
     },
+
 }
 
 module.exports = userController

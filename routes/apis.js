@@ -35,7 +35,11 @@ router.put('/users/:id', authenticated, upload.single('image'), userController.p
 router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
 router.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
- // 後台
+router.post('/like/:restaurantId', authenticated, userController.addLike)
+router.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
+
+// 後台
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
 router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
 
@@ -48,7 +52,6 @@ router.delete('/admin/categories/:id', authenticated, authenticatedAdmin,categor
 router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
 router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.deleteRestaurant)
-
 
 // 註冊
 router.post('/signup', userController.signUp)

@@ -3,6 +3,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -92,6 +93,29 @@ module.exports = {
                         return callback({status: 'Success', message: ''})
                     })
             
+        })
+    },
+    addLike: (req, res, callback) => {
+        Like.create({
+            UserId: req.user.id,
+            RestaurantId: req.params.restaurantId
+        })
+        .then(like => {
+            return callback({status: 'Success', message: ''})
+        })
+    },
+    removeLike: (req, res, callback) => {
+        Like.findOne({
+            where: {
+                UserId: req.user.id,
+                RestaurantId: req.params.restaurantId
+            }
+        })
+        .then(like => {
+            like.destroy()
+                .then(like => {
+                    return callback({status: 'Success', message: ''})
+                })
         })
     },
     getTopUser: (req, res, callback) => {
