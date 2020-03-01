@@ -65,27 +65,9 @@ module.exports = {
     },
 
     getUsers: (req, res) => {
-        User.findAll()
-            .then(users => {
-                console.log(users)
-                res.render('admin/users', JSON.parse(JSON.stringify({users: users})))
-            })
+        adminService.getUsers(req, res, data=> res.render('admin/users', data))
     },
     putUsers: (req, res) => {
-        User.findByPk(req.params.id)
-            .then(user => {
-                if (user.isAdmin) {
-                    user.update({
-                        isAdmin: false
-                    })
-                } else {
-                    user.update({
-                        isAdmin: true
-                    })
-                }
-                return user
-            }).then(user => {
-                res.redirect('/admin/users')
-            })
+        adminService.putUsers(req, res, data => res.redirect('/admin/users'))
     }
 }

@@ -53,8 +53,8 @@ router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminCon
 router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.deleteRestaurant)
 
-/////router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
-/////router.put('/admin/users/:id', authenticatedAdmin, adminController.putUsers)
+router.get('/admin/users', authenticated, authenticatedAdmin, adminController.getUsers)
+router.put('/admin/users/:id', authenticated, authenticatedAdmin, adminController.putUsers)
 
 router.get('/admin/categories', authenticated, authenticatedAdmin, categoryController.getCategories)
 router.post('/admin/categories', authenticated, authenticatedAdmin, categoryController.postCategory)

@@ -1,6 +1,7 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const User = db.User
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -102,5 +103,28 @@ module.exports = {
                         return callback({status: 'Success', message: '已更新餐廳'})
                     })
         }
+    },
+    getUsers: (req, res, callback) => {
+        User.findAll()
+            .then(users => {
+                return callback(JSON.parse(JSON.stringify({users: users})))
+            })
+    },
+    putUsers: (req, res, callback) => {
+        User.findByPk(req.params.id)
+            .then(user => {
+                if (user.isAdmin) {
+                    user.update({
+                        isAdmin: false
+                    })
+                } else {
+                    user.update({
+                        isAdmin: true
+                    })
+                }
+                return user
+            }).then(user => {
+                return callback({status: 'Success', message: '已更改使用者權限'})
+            })
     }
 }
