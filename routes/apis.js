@@ -23,6 +23,7 @@ router.get('/restaurants', authenticated, restController.getRestaurants)
 router.get('/restaurants/feeds', authenticated, restController.getFeeds)
 router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
+router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
 router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
