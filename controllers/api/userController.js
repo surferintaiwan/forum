@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const db = require('../../models')
 const User = db.User
+const userService = require('../../services/userServices')
 
 // JWT
 const jwt = require('jsonwebtoken')
@@ -74,7 +75,10 @@ let userController = {
                     }     
                 })
         }
-    }
+    },
+    getTopUser: (req, res) => {
+        userService.getTopUser(req, res, data => res.json(data))
+    },
 }
 
 module.exports = userController

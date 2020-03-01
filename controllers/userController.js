@@ -8,6 +8,7 @@ const Followership = db.Followership
 const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const userService = require('../services/userServices')
 /* 如果是想要把temp資料夾內的圖片複製到upload就要載入fs
 const fs = require('fs')
 */
@@ -185,22 +186,7 @@ const userController = {
         })
     },
     getTopUser: (req, res) => {
-        User.findAll({
-            include: [
-                {model: User, as: 'Followers'}
-            ]
-        })
-        .then(users => {
-            users = users.map(user => { 
-                return {
-                ...user.dataValues,
-                FollowerCount: user.Followers.length,
-                isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
-                }
-            })
-            users = users.sort((a, b) =>  b.FollowerCount - a.FollowerCount)
-            return res.render('topUser', { users: users})
-        })
+        userService.getTopUser(req, res, data => res.render('topUser', data))
     },
     addFollowing: (req, res) => {
         Followership.create({
