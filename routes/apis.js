@@ -3,9 +3,11 @@ const router = express.Router()
 const adminController = require('../controllers/api/adminController')
 const categoryController = require('../controllers/api/categoryContorller')
 const userController = require('../controllers/api/userController')
+const restController = require('../controllers/api/restController')
 const multer = require('multer')
 const upload = multer({dest: 'temp/'})
 const passport = require('../config/passport')
+
 
 const authenticated = passport.authenticate('jwt', { session: false })
 const authenticatedAdmin = (req, res, next) => {
@@ -16,6 +18,8 @@ const authenticatedAdmin = (req, res, next) => {
     return res.json({ status: 'error', message: 'permission denied' })
   }
 }
+
+router.get('/restaurants', authenticated, restController.getRestaurants)
 
 
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
