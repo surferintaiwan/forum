@@ -32,8 +32,9 @@ router.get('/users/:id', authenticated, userController.getUser)
 // router.get('/users/:id/edit', authenticated, userController.editUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
- // 後台
+router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
 
+ // 後台
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
 router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
 
