@@ -97,6 +97,12 @@ let userController = {
     getTopUser: (req, res) => {
         userService.getTopUser(req, res, data => res.json(data))
     },
+    addFollowing: (req, res) => {
+        userService.addFollowing(req, res, data => res.json(data))
+    },
+    removeFollowing: (req, res) => {
+        userService.removeFollowing(req, res, data => res.json(data))
+    },
 
 }
 

@@ -38,10 +38,23 @@ router.delete('/favorite/:restaurantId', authenticated, userController.removeFav
 router.post('/like/:restaurantId', authenticated, userController.addLike)
 router.delete('/like/:restaurantId', authenticated, userController.removeLike)
 
+router.post('/following/:userId', authenticated, userController.addFollowing)
+router.delete('/following/:userId', authenticated, userController.removeFollowing)
 
 // 後台
+/*router.get('/admin', authenticatedAdmin, (req, res) => {
+  res.redirect('/admin/restaurants')
+})*/
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
+// router.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
+router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
 router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
+//router.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
+router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
+router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.deleteRestaurant)
+
+/////router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
+/////router.put('/admin/users/:id', authenticatedAdmin, adminController.putUsers)
 
 router.get('/admin/categories', authenticated, authenticatedAdmin, categoryController.getCategories)
 router.post('/admin/categories', authenticated, authenticatedAdmin, categoryController.postCategory)
@@ -49,15 +62,15 @@ router.get('/admin/categories/:id', authenticated, authenticatedAdmin, categoryC
 router.put('/admin/categories/:id', authenticated, authenticatedAdmin, categoryController.putCategory)
 router.delete('/admin/categories/:id', authenticated, authenticatedAdmin,categoryController.deleteCategory)
 
-router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
-router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
-router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.deleteRestaurant)
-
 // 註冊
+//router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.signUp)
 
 // 登入(登出不需要提供給前端)
+//router.get('/signin', userController.signInPage)
 router.post('/signin', userController.signIn)
+//router.get('/logout', userController.logOut)
+
 
 // 評論
 

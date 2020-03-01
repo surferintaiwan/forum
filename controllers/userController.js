@@ -100,27 +100,10 @@ const userController = {
         userService.getTopUser(req, res, data => res.render('topUser', data))
     },
     addFollowing: (req, res) => {
-        Followership.create({
-            followerId: req.user.id,
-            followingId: req.params.userId
-        })
-        .then(followship => {
-            return res.redirect('back')
-        })
+        userService.addFollowing(req, res, data => res.redirect('back'))
     },
     removeFollowing: (req, res) => {
-        Followership.findOne({
-            where: {
-                followerId: req.user.id,
-                followingId: req.params.userId
-            }
-        })
-        .then(followership => {
-            followership.destroy()
-                        .then(followship => {
-                            return res.redirect('back')
-                        })
-        })
+        userService.removeFollowing(req, res, data => res.redirect('back'))
     }
 }
 

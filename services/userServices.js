@@ -3,6 +3,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Followership = db.Followership
 const Like = db.Like
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -136,4 +137,27 @@ module.exports = {
             return callback({users: users})
         })
     },
+    addFollowing: (req, res, callback) => {
+        Followership.create({
+            followerId: req.user.id,
+            followingId: req.params.userId
+        })
+        .then(followship => {
+            return callback({status: 'Success', message: ''})
+        })
+    },
+    removeFollowing: (req, res, callback) => {
+        Followership.findOne({
+            where: {
+                followerId: req.user.id,
+                followingId: req.params.userId
+            }
+        })
+        .then(followership => {
+            followership.destroy()
+                        .then(followship => {
+                            return callback({status: 'Success', message: ''})
+                        })
+        })
+    }
 }
