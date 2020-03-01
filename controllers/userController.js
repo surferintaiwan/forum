@@ -69,19 +69,7 @@ const userController = {
         res.redirect('/signin')
     },
     getUser: (req, res)=>{
-        User.findByPk(req.params.id)
-            .then(user => {
-                Comment.findAndCountAll({include: Restaurant, where: {UserId: req.params.id}})
-                        .then(comments => {
-                            let commentsAmounts = comments.count
-                            return res.render('userProfile', {
-                                requestUser: user.get(),
-                                commentsAmounts: commentsAmounts,
-                                comments: JSON.parse(JSON.stringify(comments.rows))
-                            })
-                        })
-            })
-        
+        userService.getUser(req, res, data => res.render('userProfile',data))
     },
     editUser: (req, res) => {
         res.render('editProfile')

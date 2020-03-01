@@ -1,7 +1,23 @@
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 
 module.exports = {
+    getUser: (req, res, callback)=>{
+        User.findByPk(req.params.id)
+            .then(user => {
+                Comment.findAndCountAll({include: Restaurant, where: {UserId: req.params.id}})
+                        .then(comments => {
+                            let commentsAmounts = comments.count
+                            return callback({
+                                requestUser: user.get(),
+                                commentsAmounts: commentsAmounts,
+                                comments: JSON.parse(JSON.stringify(comments.rows))
+                            })
+                        })
+            })
+    },
     getTopUser: (req, res, callback) => {
         User.findAll({
             include: [
