@@ -42,26 +42,7 @@ module.exports = {
         */
     },
     getFeeds: (req, res) => {
-        Restaurant.findAll({
-            raw: true,
-            nest: true,
-            limit: 10,
-            order: [['createdAt', 'DESC']],
-            include: [Category]
-        }).then(restaurants => {
-            Comment.findAll({
-                raw: true,
-                nest: true,
-                limit:10,
-                order: [['createdAt', 'DESC']],
-                include: [User, Restaurant]
-            }).then(comments=> {
-                return res.render('feeds', {
-                    restaurants: restaurants,
-                    comments:comments
-                })
-            })
-        })
+        restService.getFeeds(req, res, data => res.render('feeds', data))
     },
     getDashboard: (req, res) => {
         Restaurant.findByPk(req.params.id, {raw: true, nest: true, include: [Category]})

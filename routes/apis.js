@@ -20,7 +20,7 @@ const authenticatedAdmin = (req, res, next) => {
 }
 
 router.get('/restaurants', authenticated, restController.getRestaurants)
-
+router.get('/restaurants/feeds', authenticated, restController.getFeeds)
 
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
 router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)

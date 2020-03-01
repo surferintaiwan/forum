@@ -1,6 +1,8 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const Comment = db.Comment
+const User = db.User
 const pageLimit = 10
 
 module.exports = {
@@ -52,7 +54,29 @@ module.exports = {
                         
                                 })
                     })
-    }
+    },
+    getFeeds: (req, res, callback) => {
+        Restaurant.findAll({
+            raw: true,
+            nest: true,
+            limit: 10,
+            order: [['createdAt', 'DESC']],
+            include: [Category]
+        }).then(restaurants => {
+            Comment.findAll({
+                raw: true,
+                nest: true,
+                limit:10,
+                order: [['createdAt', 'DESC']],
+                include: [User, Restaurant]
+            }).then(comments=> {
+                return callback({
+                    restaurants: restaurants,
+                    comments:comments
+                })
+            })
+        })
+    },
 
 
 }
