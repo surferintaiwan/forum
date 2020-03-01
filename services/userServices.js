@@ -79,6 +79,21 @@ module.exports = {
             return callback({status: 'Success', message: ''})
         })
     },
+    removeFavorite: (req, res, callback) => {
+        return Favorite.findOne({
+            where: {
+                UserId: req.user.id,
+                RestaurantId: req.params.restaurantId
+            }
+        })
+        .then(favorite => {
+            favorite.destroy()
+                    .then(favorite => {
+                        return callback({status: 'Success', message: ''})
+                    })
+            
+        })
+    },
     getTopUser: (req, res, callback) => {
         User.findAll({
             include: [

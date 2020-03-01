@@ -85,6 +85,9 @@ let userController = {
     addFavorite: (req, res) => {
         userService.addFavorite(req, res, data => res.json(data))
     },
+    removeFavorite: (req, res) => {
+        userService.removeFavorite(req, res, data => res.json(data))
+    },
     getTopUser: (req, res) => {
         userService.getTopUser(req, res, data => res.json(data))
     },

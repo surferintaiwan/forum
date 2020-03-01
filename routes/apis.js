@@ -33,6 +33,7 @@ router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
 router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+router.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
  // 後台
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
