@@ -7,6 +7,9 @@ module.exports = {
             return res.json(data)
         })
     },
+    getRestaurant: (req, res) => {
+        restService.getRestaurant(req, res, data=> res.json(data))
+    },
     getFeeds: (req, res) => {
         restService.getFeeds(req, res, data => res.json(data))
     },

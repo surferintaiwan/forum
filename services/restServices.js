@@ -96,6 +96,35 @@ module.exports = {
             restaurants = restaurants.sort((a, b) => b.favoriteCount - a.favoriteCount).slice(0, 10)
             return callback({restaurants: restaurants})
         })
-    }
+    },
+    getRestaurant: (req, res, callback) => {
+        Restaurant.findByPk(req.params.id, {
+            include: [
+                Category,
+                {model: Comment, raw:true, nest:true ,include: User},
+                {model: User, as: 'FavoritedUsers'} ,
+                {model: User, as: 'LikedUsers'}
+            ]
+        }).then(restaurant => {
+            const isFavorited = restaurant.FavoritedUsers.map(r => r.id).includes(req.user.id)
+            const isLiked = restaurant.LikedUsers.map(r => r.id).includes(req.user.id)
+            restaurant.update({
+                viewCounts: restaurant.viewCounts + 1
+            })
+            return callback({
+                restaurant: JSON.parse(JSON.stringify(restaurant)),
+                isFavorited: isFavorited,
+                isLiked: isLiked
+            })
+        })
+        /*
+        Restaurant.findByPk(req.params.id, {raw: true, nest: true, include: Category})
+                    .then(restaurant => {
+                        return res.render('restaurant' , {
+                            restaurant: restaurant
+                        })
+                    })
+        */
+    },
 
 }
