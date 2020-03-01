@@ -27,9 +27,7 @@ const passport = require('../config/passport')
     }
     
     // 前台
-    router.get('/', authenticated, (req, res) => {
-        res.redirect('/restaurants')
-    })
+    router.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
     router.get('/restaurants', authenticated, restController.getRestaurants)
     router.get('/restaurants/feeds', authenticated, restController.getFeeds)
     router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
@@ -74,7 +72,7 @@ const passport = require('../config/passport')
     router.get('/signup', userController.signUpPage)
     router.post('/signup', userController.signUp)
     
-    // 登入
+    // 登入及登出
     router.get('/signin', userController.signInPage)
     router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin' ,failureFlash: true}), userController.signIn)
     router.get('/logout', userController.logOut)

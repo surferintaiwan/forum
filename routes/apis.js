@@ -19,6 +19,8 @@ const authenticatedAdmin = (req, res, next) => {
   }
 }
 
+// 前台
+//router.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
 router.get('/restaurants', authenticated, restController.getRestaurants)
 router.get('/restaurants/feeds', authenticated, restController.getFeeds)
 router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
@@ -27,6 +29,10 @@ router.get('/restaurants/:id/dashboard', authenticated, restController.getDashbo
 
 router.get('/users/top', authenticated, userController.getTopUser)
 router.get('/users/:id', authenticated, userController.getUser)
+// router.get('/users/:id/edit', authenticated, userController.editUser)
+router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+
+ // 後台
 
 router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
 router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
@@ -41,7 +47,13 @@ router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.sing
 router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.deleteRestaurant)
 
-router.post('/signin', userController.signIn)
+
+// 註冊
 router.post('/signup', userController.signUp)
+
+// 登入(登出不需要提供給前端)
+router.post('/signin', userController.signIn)
+
+// 評論
 
 module.exports = router
